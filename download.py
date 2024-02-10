@@ -9,8 +9,8 @@ from tkinter import filedialog
 # ----------GLOBAL-------------
 
 global script_dir
-script_dir = os.getcwd()
-default_directory = script_dir
+directory = os.getcwd()
+
 
 # ----------FUNCTIONS----------
 
@@ -32,12 +32,11 @@ def downloadVideo(link,label):
 
 # Function to download MP3 from youtube video
 def downloadSong(link, label):
-
     inp= link.get("1.0","end-1c")
 
     # Download the video
     yt = YouTube(inp)
-    stream = yt.streams.filter(only_audio=True).first()
+    stream = sorted(yt.streams.filter(only_audio=True), key=lambda s: s.abr, reverse=True)[0]
     temp_filename = "temp.mp4"
     stream.download(filename=temp_filename)
 
@@ -65,7 +64,7 @@ def download(link,label):
 # Function to choose directory
 def choose_directory():
     global directory
-    directory = filedialog.askdirectory(initialdir=default_directory)
+    directory = filedialog.askdirectory()
     print(directory)
 
 # ----------GUI----------
