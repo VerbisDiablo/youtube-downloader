@@ -6,6 +6,12 @@ import tkinter as tk
 from tkinter import font
 from tkinter import filedialog
 
+# ----------GLOBAL-------------
+
+global script_dir
+script_dir = os.getcwd()
+default_directory = script_dir
+
 # ----------FUNCTIONS----------
 
 # Function to clear text
@@ -33,7 +39,7 @@ def downloadSong(link, label):
     yt = YouTube(inp)
     stream = yt.streams.filter(only_audio=True).first()
     temp_filename = "temp.mp4"
-    stream.download(output_path=directory, filename=temp_filename)
+    stream.download(filename=temp_filename)
 
     # Use the video title as the filename for the MP3 file
     filename = "".join([c for c in yt.title if c.isalpha() or c.isdigit() or c==' ']).rstrip() + ".mp3"
@@ -59,7 +65,7 @@ def download(link,label):
 # Function to choose directory
 def choose_directory():
     global directory
-    directory = filedialog.askdirectory()
+    directory = filedialog.askdirectory(initialdir=default_directory)
     print(directory)
 
 # ----------GUI----------
