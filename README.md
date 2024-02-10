@@ -3,6 +3,12 @@
 
 This is a little "program" I made because I was tired of all the **ads** / **viruses** on such sites.
 
+# Features
+
+- It lets you choose whether you want to download .MP3 or .MP4
+- It always downloads best quality available for the video
+- It lets you choose the directory where you want to download
+
 # How to install
 
 It's pretty easy, all you have to do is run one of the files below.<br>
