@@ -1,10 +1,14 @@
 from __future__ import unicode_literals
 import os
 from pytube import YouTube
+from pytube.innertube import _default_clients
 from moviepy.editor import AudioFileClip
 import tkinter as tk
 from tkinter import font
 from tkinter import filedialog
+
+# Bypass age restriction
+_default_clients["ANDROID_MUSIC"] = _default_clients["ANDROID"]
 
 # ----------GLOBAL-------------
 
@@ -24,32 +28,24 @@ def downloadVideo(link,label):
     youtubeObject = YouTube(inp)
     filename = "".join([c for c in youtubeObject.title if c.isalpha() or c.isdigit() or c==' ']).rstrip() + ".mp4"
     youtubeObject = youtubeObject.streams.get_highest_resolution()
-    try:
-        youtubeObject.download(output_path=directory)
-        label.config(text="Download finished: " + filename)
-    except:
-        label.config(text="An error has occurred")
+    youtubeObject.download(output_path=directory)
+    label.config(text="Download finished: " + filename)
+    return filename
 
 # Function to download MP3 from youtube video
 def downloadSong(link, label):
-    inp= link.get("1.0","end-1c")
-
-    # Download the video
-    yt = YouTube(inp)
-    stream = sorted(yt.streams.filter(only_audio=True), key=lambda s: s.abr, reverse=True)[0]
-    temp_filename = "temp.mp4"
-    stream.download(filename=temp_filename)
+    filename = downloadVideo(link,label)
 
     # Use the video title as the filename for the MP3 file
-    filename = "".join([c for c in yt.title if c.isalpha() or c.isdigit() or c==' ']).rstrip() + ".mp3"
+    filename = filename.replace(".mp4", ".mp3")
 
     # Convert the video to MP3
-    clip = AudioFileClip(temp_filename)
+    clip = AudioFileClip(f"{directory}/{filename.replace('.mp3', '.mp4')}")
     clip.write_audiofile(f"{directory}/{filename}")
 
     # Clean up the temporary file
     clip.close()
-    os.remove(temp_filename)
+    os.remove(f"{directory}/{filename.replace('.mp3', '.mp4')}")
 
     # Update the label
     label.config(text="Download finished: " + filename)
